@@ -2,29 +2,45 @@ var express = require('express');
 var router = express.Router();
 var url = require('url');
 var contacts = require('../modules/contacts');
+var dataservice = require('../modules/contactdataservice');
+var Contact = require('../model/contacts');
+
+
+router.get('/:number', function(request, response) {
+//response.setHeader('content-type', 'application/json');
+console.log("Quering: " + request.url + "  " + request.params.number);
+dataservice.findByNumber(Contact, request.params.number, response);
+//response.end(JSON.stringify(contacts.query(request.params.
+//number)));
+});
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    var get_params = url.parse(req.url, true).query;
-    if (Object.keys(get_params).length == 0){
-        res.setHeader('content-type', 'application/json');
-        res.end(JSON.stringify(contacts.list()));
-    }
-    else{
-        res.setHeader('content-type', 'application/json');
-        res.end(JSON.
-        stringify(
-        contacts.query_by_arg(
-        get_params.arg, get_params.value)
-));
-    }
-});
+    var getParams = url.parse(req.url, true).query;
+    if(Object.keys(getParams).length == 0){
+        dataservice.list(Contact, res);
+    }else{
+        var key = Object.keys(getParams)[0];
+        var value = getParams[key];
+        JSON.stringify(dataservice.query_by_args(Contact, key, value, res));
 
-router.get('/:number', function(request, response) {
-response.setHeader('content-type', 'application/json');
-response.end(JSON.stringify(contacts.query(request.params.
-number)));
+    }
+    //dataservice.list(Contact, res);
 });
 
 
+router.post('/', function(req, res){
+    dataservice.create(Contact, req.body, res);
+});
+
+
+
+/*
+router.get('/:name', function(request, response) {
+//response.setHeader('content-type', 'application/json');
+dataservice.findByName(Contact, request.params.name, response);
+//response.end(JSON.stringify(contacts.query(request.params.
+//number)));
+});
+*/
 module.exports = router;
