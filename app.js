@@ -6,7 +6,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 //var usersRouter = require('./routes/users');
-//var contactsRouter = require('./routes/contacts');
+var contactsRouter = require('./routes/contacts');
 var crimesRouter = require('./routes/crimes');
 
 var app = express();
@@ -23,7 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 //app.use('/users', usersRouter);
-//app.use("/contacts", contactsRouter);
+app.use("/contacts", contactsRouter);
 app.use("/crimes", crimesRouter);
 
 // catch 404 and forward to error handler
@@ -43,11 +43,11 @@ app.use(function(err, req, res, next) {
 });
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/crimesdb');
+mongoose.connect("mongodb+srv://dasalgadob:0wx5CT3z63VNkalo@clusterdemo-hudcq.gcp.mongodb.net/test?retryWrites=true");
 
 //import model
 var Crime = require('./model/crime');
-//var Contact = require('./model/contacts'); 
+var Contact = require('./model/contacts'); 
 
 
 
